@@ -1,5 +1,5 @@
 import datetime
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -38,22 +38,36 @@ class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TagSerializer
 
 
-class PostView(generics.ListCreateAPIView):
+# class PostView(generics.ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#     filter_backends = [DjangoFilterBackend, SearchFilter]
+#     filterset_fields = ['category', 'tags__slug', 'title']
+#     search_fields = ['title', 'body']
+
+#     def get_serializer_class(self):
+#         if self.request.method == 'GET':
+#             return PostListSerializer
+#         return self.serializer_class
+#         # return PostSerializer
+    
+
+# class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+    
+
+class PostViewset(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['category', 'tags__slug', 'title']
     search_fields = ['title', 'body']
-
+    
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        if self.action == 'list':
             return PostListSerializer
         return self.serializer_class
-        # return PostSerializer
-    
 
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
