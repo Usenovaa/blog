@@ -17,8 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Python 32 ev',
+        description='makers bootcamp',
+        default_version='v5'
+    ), 
+    public=True
+)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('post.urls')),
-    path('api/v1/account/', include('account.urls'))
+    path('api/v1/account/', include('account.urls')), 
+    path('docs/', schema_view.with_ui('swagger'))
 ]

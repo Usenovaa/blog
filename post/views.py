@@ -3,7 +3,9 @@ from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
+from .permissions import IsAuthorPermission
 from .serializers import *
 from .models import Category
 
@@ -68,6 +70,17 @@ class PostViewset(viewsets.ModelViewSet):
         if self.action == 'list':
             return PostListSerializer
         return self.serializer_class
+    
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [IsAuthenticated]
+        elif self.action in ['list', 'retrieve']:
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAuthorPermission]
+        return super().get_permissions()
+
+        
 
 
 

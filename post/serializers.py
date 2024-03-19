@@ -1,4 +1,4 @@
-from rest_framework.serializers import Serializer, ModelSerializer
+from rest_framework.serializers import Serializer, ModelSerializer, ReadOnlyField
 from .models import Category, Tag, Post
 
 
@@ -16,9 +16,16 @@ class TagSerializer(ModelSerializer):
 
 
 class PostSerializer(ModelSerializer):
+    author = ReadOnlyField(source='author.email')
+
     class Meta:
         model = Post
         fields = '__all__'
+        
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        validated_data['author'] = user
+        return super().create(validated_data)
 
 
 class PostListSerializer(ModelSerializer):
