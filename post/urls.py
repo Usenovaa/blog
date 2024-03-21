@@ -6,10 +6,9 @@ from .views import *
 
 router = DefaultRouter()
 router.register('posts', PostViewset)
+router.register('comments', CommentViewset)
+router.register('like', LikeViewset)
 
-# print('=============')
-# print(router.urls)
-# print('=============')
 
 urlpatterns = [
     path('categories/', CategoryView.as_view()),
